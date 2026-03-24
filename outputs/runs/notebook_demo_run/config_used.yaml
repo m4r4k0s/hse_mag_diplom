@@ -1,0 +1,37 @@
+code:
+  constraint_length: 7
+  polynomials:
+  - 171
+  - 133
+  rate: 0.5
+experiment:
+  K: 64
+  num_blocks: 12
+  snr_db_list:
+  - 0
+  - 2
+  seed: 123
+  batch_size: 16
+  decoders:
+  - viterbi
+  - bcjr
+  - neural_viterbi
+  - neural_bcjr
+  run_name: notebook_demo_run
+  reuse_saved_signals: false
+paths:
+  outputs_root: /tmp/dpcheck/dp-codex-create-repository-for-neural-viterbi-and-bcjr-j6ug56/outputs/runs
+training:
+  enabled: true
+  epochs: 1
+  learning_rate: 0.001
+  hidden_dim: 16
+  device: cpu
+  save_checkpoints: true
+  reuse_checkpoints: true
+  train_snr_db_list:
+  - 0
+  - 2
+neural:
+  tau: 1.0
+checkpoint_paths: {}
