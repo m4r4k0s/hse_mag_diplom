@@ -1,0 +1,35 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "comm-ai"
+version = "0.1.0"
+description = "Neural Viterbi vs Neural BCJR for convolutional codes across AWGN, fading, and mismatch scenarios"
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [{name = "comm-ai"}]
+dependencies = [
+  "numpy>=1.24",
+  "torch>=2.1",
+  "matplotlib>=3.7",
+  "tqdm>=4.66",
+  "PyYAML>=6.0",
+  "pandas>=2.0",
+  "tabulate>=0.9"
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=7.0"]
+notebooks = ["jupyterlab>=4.0", "ipykernel>=6.0", "nbformat>=5.0", "plotly>=5.0", "ipywidgets>=8.0"]
+tf = ["tensorflow>=2.15"]
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]

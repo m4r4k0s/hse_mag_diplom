@@ -1,0 +1,69 @@
+code:
+  constraint_length: 7
+  polynomials:
+  - 171
+  - 133
+  rate: 0.5
+experiment:
+  K: 256
+  num_blocks: 800
+  snr_db_list:
+  - -8
+  - -6
+  - -5
+  - -4
+  - -3
+  - -2
+  - -1
+  - 0
+  - 1
+  - 2
+  - 3
+  - 4
+  - 5
+  - 6
+  - 8
+  seed: 42
+  batch_size: 16
+  decoders:
+  - viterbi
+  - bcjr
+  - neural_viterbi
+  - neural_bcjr
+  run_name: research_p04_rayleigh_k256_dense
+  reuse_saved_signals: true
+paths:
+  outputs_root: /mnt/data/work/repo/dp-codex-create-repository-for-neural-viterbi-and-bcjr-j6ug56/для_показа/backups/results
+training:
+  enabled: true
+  epochs: 25
+  learning_rate: 0.0005
+  hidden_dim: 128
+  device: cpu
+  save_checkpoints: true
+  reuse_checkpoints: true
+  train_snr_db_list:
+  - -8
+  - -6
+  - -5
+  - -4
+  - -3
+  - -2
+  - -1
+  - 0
+  - 1
+  - 2
+  - 3
+  - 4
+  - 5
+  - 6
+  - 8
+neural:
+  tau: 1.0
+checkpoint_paths:
+  neural_viterbi: /mnt/data/work/repo/dp-codex-create-repository-for-neural-viterbi-and-bcjr-j6ug56/для_показа/backups/results/research_p04_rayleigh_k256_dense/checkpoints/best_neural_viterbi.pt
+  neural_bcjr: /mnt/data/work/repo/dp-codex-create-repository-for-neural-viterbi-and-bcjr-j6ug56/для_показа/backups/results/research_p04_rayleigh_k256_dense/checkpoints/best_neural_bcjr.pt
+demo:
+  level: research_pack_04
+  scenario: rayleigh
+  description: BPSK + Rayleigh fading + AWGN. Канал с замираниями.

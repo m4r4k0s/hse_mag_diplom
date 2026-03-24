@@ -1,0 +1,14 @@
+# Команды для запуска исследовательской матрицы
+# Рекомендуемый порядок запуска.
+python для_показа/batch_runs/run_research_matrix.py --pack pack01 --force-regenerate --force-retrain
+python для_показа/batch_runs/run_research_matrix.py --pack pack02 --force-regenerate --force-retrain
+python для_показа/batch_runs/run_research_matrix.py --pack pack03 --force-regenerate --force-retrain
+python для_показа/batch_runs/run_research_matrix.py --pack pack04 --force-regenerate --force-retrain
+python для_показа/batch_runs/run_research_matrix.py --pack pack05 --force-regenerate --force-retrain
+python для_показа/batch_runs/run_research_matrix.py --pack pack06 --force-regenerate --force-retrain
+# Или всё подряд
+python для_показа/batch_runs/run_research_matrix.py --pack all --force-regenerate --force-retrain
+
+# Запуск одного конкретного конфига
+python для_показа/batch_runs/run_single_config.py --config для_показа/configs/research_pack/research_p03_rayleigh_mismatch_k128.yaml --force-regenerate --force-retrain
+python для_показа/batch_runs/run_single_config.py --config для_показа/configs/research_pack/research_p04_impulsive_mismatch_k256_dense.yaml --force-regenerate --force-retrain

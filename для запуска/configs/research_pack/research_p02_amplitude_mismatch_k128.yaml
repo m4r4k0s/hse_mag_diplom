@@ -1,0 +1,55 @@
+code:
+  constraint_length: 7
+  polynomials:
+  - 171
+  - 133
+  rate: 0.5
+experiment:
+  K: 128
+  num_blocks: 300
+  snr_db_list:
+  - -8
+  - -6
+  - -4
+  - -2
+  - 0
+  - 2
+  - 4
+  - 6
+  seed: 42
+  batch_size: 16
+  decoders:
+  - viterbi
+  - bcjr
+  - neural_viterbi
+  - neural_bcjr
+  run_name: research_p02_amplitude_mismatch_k128
+  reuse_saved_signals: true
+paths:
+  outputs_root: /mnt/data/work/repo/dp-codex-create-repository-for-neural-viterbi-and-bcjr-j6ug56/для_показа/backups/results
+training:
+  enabled: true
+  epochs: 15
+  learning_rate: 0.001
+  hidden_dim: 64
+  device: cpu
+  save_checkpoints: true
+  reuse_checkpoints: true
+  train_snr_db_list:
+  - -8
+  - -6
+  - -4
+  - -2
+  - 0
+  - 2
+  - 4
+  - 6
+neural:
+  tau: 1.0
+checkpoint_paths:
+  neural_viterbi: /mnt/data/work/repo/dp-codex-create-repository-for-neural-viterbi-and-bcjr-j6ug56/для_показа/backups/results/research_p02_amplitude_mismatch_k128/checkpoints/best_neural_viterbi.pt
+  neural_bcjr: /mnt/data/work/repo/dp-codex-create-repository-for-neural-viterbi-and-bcjr-j6ug56/для_показа/backups/results/research_p02_amplitude_mismatch_k128/checkpoints/best_neural_bcjr.pt
+demo:
+  level: research_pack_02
+  scenario: amplitude_mismatch
+  description: Амплитуда сигнала меняется, а формула LLR остаётся стандартной.

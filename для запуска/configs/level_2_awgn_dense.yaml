@@ -1,0 +1,63 @@
+code:
+  constraint_length: 7
+  polynomials:
+  - 171
+  - 133
+  rate: 0.5
+experiment:
+  K: 64
+  num_blocks: 20
+  snr_db_list:
+  - 0
+  - 1
+  - 2
+  - 3
+  - 4
+  seed: 42
+  batch_size: 16
+  decoders:
+  - viterbi
+  - bcjr
+  - neural_viterbi
+  - neural_bcjr
+  run_name: level_2_awgn_dense
+  reuse_saved_signals: true
+paths:
+  outputs_root: "C:\\Users\\maks\\Desktop\\maga\\\u0434\u0438\u043F\u043B\u043E\u043C\
+    \\\u043F\u0440\u0430\u043A\u0442\u0438\u043A\u0430\\3\\\u0425\u0430\u0445\u0438\
+    \u043D \u041C.\u0421\\\u0434\u043B\u044F \u0437\u0430\u043F\u0443\u0441\u043A\u0430\
+    \\backups\\results"
+training:
+  enabled: true
+  epochs: 2
+  learning_rate: 0.001
+  hidden_dim: 16
+  device: cpu
+  save_checkpoints: true
+  reuse_checkpoints: true
+  train_snr_db_list:
+  - 0
+  - 1
+  - 2
+  - 3
+  - 4
+neural:
+  tau: 1.0
+checkpoint_paths:
+  neural_viterbi: "C:\\Users\\maks\\Desktop\\maga\\\u0434\u0438\u043F\u043B\u043E\u043C\
+    \\\u043F\u0440\u0430\u043A\u0442\u0438\u043A\u0430\\3\\\u0425\u0430\u0445\u0438\
+    \u043D \u041C.\u0421\\\u0434\u043B\u044F \u0437\u0430\u043F\u0443\u0441\u043A\u0430\
+    \\backups\\results\\level_2_awgn_dense\\checkpoints\\best_neural_viterbi.pt"
+  neural_bcjr: "C:\\Users\\maks\\Desktop\\maga\\\u0434\u0438\u043F\u043B\u043E\u043C\
+    \\\u043F\u0440\u0430\u043A\u0442\u0438\u043A\u0430\\3\\\u0425\u0430\u0445\u0438\
+    \u043D \u041C.\u0421\\\u0434\u043B\u044F \u0437\u0430\u043F\u0443\u0441\u043A\u0430\
+    \\backups\\results\\level_2_awgn_dense\\checkpoints\\best_neural_bcjr.pt"
+demo:
+  level: level_2
+  scenario: awgn
+  description: "BPSK + AWGN. \u0411\u0430\u0437\u043E\u0432\u044B\u0439 \u0443\u0447\
+    \u0435\u0431\u043D\u044B\u0439 \u0441\u0446\u0435\u043D\u0430\u0440\u0438\u0439\
+    , \u0432 \u043A\u043E\u0442\u043E\u0440\u043E\u043C \u043A\u043B\u0430\u0441\u0441\
+    \u0438\u0447\u0435\u0441\u043A\u0438\u0435 \u0430\u043B\u0433\u043E\u0440\u0438\
+    \u0442\u043C\u044B \u043E\u0431\u044B\u0447\u043D\u043E \u043D\u0430\u0438\u0431\
+    \u043E\u043B\u0435\u0435 \u0441\u0438\u043B\u044C\u043D\u044B."

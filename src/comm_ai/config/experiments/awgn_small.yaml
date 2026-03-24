@@ -1,0 +1,27 @@
+code:
+  constraint_length: 7
+  polynomials: [171, 133]
+  rate: 0.5
+experiment:
+  K: 128
+  num_blocks: 50
+  snr_db_list: [0, 2]
+  seed: 123
+  batch_size: 16
+  decoders: [viterbi, bcjr, neural_viterbi, neural_bcjr]
+  run_name: awgn_small
+  reuse_saved_signals: false
+paths:
+  outputs_root: outputs/runs
+training:
+  enabled: true
+  epochs: 3
+  learning_rate: 0.001
+  hidden_dim: 16
+  device: cpu
+  save_checkpoints: true
+  reuse_checkpoints: true
+  train_snr_db_list: [0, 2]
+neural:
+  tau: 1.0
+checkpoint_paths: {}

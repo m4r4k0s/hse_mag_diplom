@@ -1,0 +1,37 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+.ipynb_checkpoints/
+data/raw/*
+!data/raw/.gitkeep
+data/generated/*
+!data/generated/.gitkeep
+outputs/runs/*
+!outputs/runs/.gitkeep
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Experiment outputs
+outputs/
+data/generated/
+data/raw/
+
+# Demo / showcase artifacts
+для запуска/backups/results/
+для запуска/backups/checkpoints/
+для запуска/backups/datasets/
+для запуска/backups/figures/
+
+# Large artifacts
+*.npz
+*.pt
+*.pth
+*.ckpt
+*.png
+*.html
+
+# Optional logs
+*.log
