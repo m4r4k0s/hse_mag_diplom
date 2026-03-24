@@ -122,3 +122,199 @@ pip install -e .
 pip install -e ".[dev,notebooks]"
 # optional
 pip install -e ".[dev,notebooks,tf]"
+````
+
+---
+
+## Быстрый старт
+
+### Базовый CLI-запуск
+
+```bash
+python -m comm_ai.experiments.run_experiment --config src/comm_ai/config/experiments/awgn_smoke.yaml
+```
+
+### Более содержательный демонстрационный запуск
+
+```bash
+python -m comm_ai.experiments.run_experiment --config src/comm_ai/config/experiments/awgn_small.yaml
+```
+
+---
+
+## Обучение neural-моделей
+
+```bash
+python -m comm_ai.training.train_neural_viterbi --config src/comm_ai/config/experiments/awgn_small.yaml
+python -m comm_ai.training.train_neural_bcjr --config src/comm_ai/config/experiments/awgn_small.yaml
+```
+
+Важно: `train_neural_viterbi` и `train_neural_bcjr` по умолчанию ожидают существующий файл
+`signals.npz` по пути:
+
+```text
+outputs/runs/<run_name>/signals.npz
+```
+
+Если dataset не передан явно, обычно сначала запускают `run_experiment`, чтобы сгенерировать сигналы.
+
+---
+
+## Повторное использование сигналов и checkpoint'ов
+
+* Для повторного прогона на тех же сигналах используйте `experiment.reuse_saved_signals: true`
+* По умолчанию checkpoint'ы ищутся в:
+
+  * `outputs/runs/<run_name>/checkpoints/`
+* Пользовательские пути можно передать через `checkpoint_paths` в YAML
+
+---
+
+## Артефакты запуска
+
+После эксперимента в папке
+
+```text
+outputs/runs/<run_name>/
+```
+
+сохраняются:
+
+* `signals.npz`
+* `results.csv`
+* `ber_plot.png`
+* `fer_plot.png`
+* `timing_plot.png`
+* `summary.md`
+* `config_used.yaml`
+* `run_metadata.json`
+* `checkpoints/best_neural_viterbi.pt`
+* `checkpoints/best_neural_bcjr.pt`
+
+---
+
+## Папка `для запуска/backups`
+
+Внутри `для запуска` предусмотрена backup-структура для демонстрации и предрасчётов.
+
+Обычно там могут находиться:
+
+* `backups/results/`
+* `backups/checkpoints/`
+* `backups/datasets/`
+
+### Важно
+
+Тяжёлые предрасчёты **не рекомендуется хранить в Git-репозитории**.
+Обычно они передаются отдельно:
+
+* архивом,
+* через Google Drive / Яндекс Диск / OneDrive,
+* или в виде отдельного teacher/demo pack.
+
+То есть:
+
+* **GitHub** хранит код, конфиги и ноутбуки;
+* **предрасчёты** передаются отдельно.
+
+---
+
+## Папки `data/raw` и `data/generated`
+
+Эти директории оставлены как стандартные точки расширения для будущих сценариев загрузки и подготовки данных.
+
+В текущей версии основные артефакты экспериментов пишутся в:
+
+* `outputs/runs/`
+* `для запуска/backups/` (если используется демонстрационный слой)
+
+---
+
+## Ноутбуки
+
+### Технические ноутбуки в `notebooks/`
+
+Это более инженерные и исследовательские ноутбуки:
+
+* `00_quickstart.ipynb` - быстрый вход и мини-pipeline
+* `01_baselines_viterbi_bcjr.ipynb` - сравнение baseline-алгоритмов
+* `02_train_neural_viterbi.ipynb` - обучение Neural Viterbi
+* `03_train_neural_bcjr.ipynb` - обучение Neural BCJR
+* `04_compare_all.ipynb` - сравнение всех декодеров
+* `05_reproduce_from_saved_signals.ipynb` - воспроизводимость на фиксированных сигналах
+
+### Основной show-ноутбук
+
+Для демонстрации результатов, подготовки выводов по ВКР и работы с предрасчётами рекомендуется использовать ноутбук из папки:
+
+* `для запуска/`
+
+Именно он содержит:
+
+* агрегированную аналитику,
+* сравнение neural-моделей,
+* сравнение с baseline,
+* прикладные выводы по сценариям и параметрам.
+
+---
+
+## Research-конфиги и пакетные прогоны
+
+В папке `для запуска` находятся:
+
+* research-конфиги,
+* batch-runner'ы,
+* сценарии для расширенной серии экспериментов.
+
+Это позволяет:
+
+* запускать отдельные конфиги;
+* запускать целые пакеты сценариев;
+* формировать расширенную исследовательскую матрицу для дипломной работы.
+
+---
+
+## Использование предрасчётов
+
+Если у тебя уже есть готовые предрасчёты, то повторно обучать модели не требуется.
+
+Обычно достаточно:
+
+1. скачать архив с предрасчётами;
+2. распаковать его в нужную папку (`для запуска/backups/results/`);
+3. открыть основной show-notebook;
+4. выполнить аналитические ячейки без ожидания обучения.
+
+---
+
+## Запуск в Google Colab
+
+```python
+!git clone https://github.com/m4r4k0s/hse_mag_diplom.git
+%cd hse_mag_diplom
+!pip install -e ".[notebooks]"
+!python -m comm_ai.experiments.run_experiment --config src/comm_ai/config/experiments/awgn_smoke.yaml
+```
+
+---
+
+## Для чего полезен этот проект
+
+Проект можно использовать для:
+
+* сравнения `Neural Viterbi` и `Neural BCJR`;
+* анализа BER / FER / времени декодирования;
+* проверки поведения декодеров на matched- и mismatch-сценариях;
+* подготовки аналитических материалов для ВКР;
+* демонстрации результатов без повторного длительного обучения, если есть готовые предрасчёты.
+
+---
+
+## Краткий итог
+
+Если нужен:
+
+* **код и базовая структура** -> смотри `src/`, `notebooks/`, `tests/`
+* **демонстрация и итоговая аналитика** -> смотри папку **`для запуска`**
+* **предрасчёты** -> храни и передавай их отдельно от GitHub-репозитория
+
