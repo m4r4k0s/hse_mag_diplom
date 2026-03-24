@@ -1,52 +1,119 @@
-# Neural Viterbi vs Neural BCJR (AWGN)
+# Neural Viterbi / Neural BCJR for Convolutional Decoding
 
-Воспроизводимый Python-пакет для сравнения baseline-декодеров (Viterbi, BCJR) и learned-prototype декодеров (LLR-calibrated Neural Viterbi, LLR-calibrated Neural BCJR) для сверточных кодов в канале AWGN.
+Воспроизводимый Python-проект для исследования и сравнения двух обучаемых декодеров:
+- **Neural Viterbi**
+- **Neural BCJR**
 
-## Что происходит в проекте
+В проекте также присутствуют классические baseline-алгоритмы:
+- `viterbi`
+- `bcjr`
 
-Проект моделирует стандартный цифровой pipeline связи:
+Основной акцент работы сделан на сравнении **двух neural-подходов**, а классические алгоритмы используются как контрольная линия и инженерный ориентир.
 
-1. `u` - исходные информационные биты.
-2. `c` - закодированные биты (сверточный код).
-3. `x` - BPSK-символы (`x = 1 - 2*c`).
-4. `noise` - AWGN-шум.
-5. `y` - принятый сигнал (`x + noise`).
-6. `llr` - soft-информация для декодирования.
+---
 
-Далее эти данные подаются в baseline и neural-прототипы декодеров, а затем сравниваются BER/FER/время.
+## Основная идея проекта
 
-## Папка `для запуска`
+Проект моделирует цифровой тракт связи и исследует, как ведут себя классические и обучаемые декодеры на разных типах каналов и искажений.
 
-В проекте также есть папка `для запуска`, которая используется как демонстрационный и исследовательский слой поверх базового пакета.
+Базовый pipeline выглядит так:
 
-В ней находятся:
-- основной show-notebook для демонстрации результатов;
+1. `u` - исходные информационные биты  
+2. `c` - закодированные биты (сверточный код)  
+3. `x` - BPSK-символы (`x = 1 - 2*c`)  
+4. `noise` - шум или искажения канала  
+5. `y` - принятый сигнал  
+6. `llr` - soft-информация для декодирования  
+
+Далее данные подаются в baseline- и neural-декодеры, после чего сравниваются:
+- `BER`
+- `FER`
+- время декодирования
+- поведение на разных сценариях и параметрах
+
+---
+
+## Основной интерфейс проекта: папка `для запуска`
+
+Главная пользовательская часть проекта сосредоточена в папке **`для запуска`**.  
+Именно её удобно использовать для демонстрации, исследования и подготовки материалов для ВКР.
+
+В папке `для запуска` находятся:
+
+- основной show-notebook с итоговой аналитикой и выводами;
 - research-конфиги для расширенной серии экспериментов;
-- batch-скрипты для массового запуска;
-- локальные backup-артефакты экспериментов.
+- batch-скрипты для пакетного запуска;
+- backup-структура для хранения предрасчётов;
+- демонстрационный слой поверх базового Python-пакета.
 
-Важно: тяжёлые результаты (`backups/results`, checkpoints, datasets) не хранятся в Git-репозитории и должны быть исключены через `.gitignore`.
+### Что важно понимать
+Папка `для запуска` - это не просто вспомогательная директория, а **исследовательская оболочка** вокруг базового кода.  
+Если цель - показать результаты, сделать сводный анализ, построить выводы по сценариям и метрикам, то начинать нужно именно с неё.
+
+---
+
+## Какие сценарии рассматриваются
+
+В проекте исследуются не только базовые matched-сценарии, но и более сложные режимы:
+
+- `awgn`
+- `rayleigh`
+- `amplitude_mismatch`
+- `noise_mismatch`
+- `burst`
+- `impulsive_mismatch`
+- `rayleigh_mismatch`
+
+Таким образом, проект покрывает как простые и хорошо моделируемые условия, так и более тяжёлые mismatch-сценарии, где обучаемые подходы могут быть особенно интересны.
+
+---
 
 ## Что означает SNR
 
 `SNR [dB]` - отношение мощности сигнала к мощности шума в децибелах.
-- Больше SNR → меньше влияние шума.
-- Меньше SNR → декодирование сложнее.
 
-## Что такое BER / FER
+- больше `SNR` -> шум влияет меньше;
+- меньше `SNR` -> декодирование становится сложнее.
 
-- `BER` (Bit Error Rate) - доля ошибочно восстановленных битов.
-- `FER` (Frame Error Rate) - доля блоков, где есть хотя бы одна ошибка.
+---
 
-Меньше BER/FER - лучше.
+## Что такое BER и FER
 
-## Что сейчас реализовано как learned prototype
+- `BER` (`Bit Error Rate`) - доля ошибочно восстановленных битов  
+- `FER` (`Frame Error Rate`) - доля блоков, в которых есть хотя бы одна ошибка  
+
+Для обеих метрик:
+- меньше значение -> лучше качество декодирования
+
+---
+
+## Что реализовано как learned prototype
 
 Текущая learned-часть реализована как **LLR calibration prototype**:
-- нейросеть калибрует LLR/ветвевые метрики;
-- далее используется классический Viterbi/BCJR core.
 
-Это не заявляется как fully end-to-end differentiable trellis decoder core.
+- нейросеть калибрует LLR или ветвевые метрики;
+- после этого используется классический `Viterbi` или `BCJR` core.
+
+Это означает, что текущая версия:
+- **не является fully end-to-end differentiable trellis decoder core**;
+- но уже позволяет исследовать, насколько обучаемая коррекция метрик помогает в разных режимах канала.
+
+---
+
+## Структура проекта
+
+Основной код лежит в:
+
+- `src/comm_ai/` - библиотечная часть проекта
+- `notebooks/` - технические и исследовательские ноутбуки
+- `для запуска/` - основной демонстрационный и исследовательский слой
+- `tests/` - автоматические проверки
+- `scripts/` - вспомогательные сценарии запуска
+
+Подробная карта модулей:
+- `src/comm_ai/PROJECT_STRUCTURE.md`
+
+---
 
 ## Установка
 
@@ -55,75 +122,3 @@ pip install -e .
 pip install -e ".[dev,notebooks]"
 # optional
 pip install -e ".[dev,notebooks,tf]"
-```
-
-## Быстрый старт (CLI)
-
-```bash
-python -m comm_ai.experiments.run_experiment --config src/comm_ai/config/experiments/awgn_smoke.yaml
-```
-
-Или демонстрационный запуск:
-
-```bash
-python -m comm_ai.experiments.run_experiment --config src/comm_ai/config/experiments/awgn_small.yaml
-```
-
-## Обучение neural-моделей
-
-```bash
-python -m comm_ai.training.train_neural_viterbi --config src/comm_ai/config/experiments/awgn_small.yaml
-python -m comm_ai.training.train_neural_bcjr --config src/comm_ai/config/experiments/awgn_small.yaml
-```
-
-Важно: `train_neural_viterbi` и `train_neural_bcjr` по умолчанию ожидают существующий
-`signals.npz` по пути `outputs/runs/<run_name>/signals.npz`, если не передан `--dataset`.
-Обычно сначала запускают `run_experiment` для генерации сигналов.
-
-## Повторное использование сигналов и checkpoint'ов
-
-- Для повторного прогона на тех же сигналах выставьте `experiment.reuse_saved_signals: true`.
-- По умолчанию checkpoint'ы ищутся в `outputs/runs/<run_name>/checkpoints/`.
-- Пользовательские пути можно передать через `checkpoint_paths` в YAML.
-
-## Артефакты запуска
-
-В `outputs/runs/<run_name>/` сохраняются:
-- `signals.npz`
-- `results.csv`
-- `ber_plot.png`
-- `fer_plot.png`
-- `timing_plot.png`
-- `summary.md`
-- `config_used.yaml`
-- `run_metadata.json`
-- `checkpoints/best_neural_viterbi.pt`
-- `checkpoints/best_neural_bcjr.pt`
-
-## Папки `data/raw` и `data/generated`
-
-Эти директории оставлены как стандартные точки расширения для будущих сценариев загрузки/подготовки данных.
-В текущей версии основные артефакты экспериментов пишутся в `outputs/runs/`.
-
-## Ноутбуки
-
-Основной пользовательский интерфейс для демонстрации:
-- `00_quickstart.ipynb` - быстрый вход и полный мини-pipeline.
-- `01_baselines_viterbi_bcjr.ipynb` - baseline-only сравнение.
-- `02_train_neural_viterbi.ipynb` - обучение Neural Viterbi.
-- `03_train_neural_bcjr.ipynb` - обучение Neural BCJR.
-- `04_compare_all.ipynb` - главное сравнение всех декодеров.
-- `05_reproduce_from_saved_signals.ipynb` - воспроизводимость на фиксированных сигналах.
-
-## Запуск в Google Colab
-
-```python
-!git clone https://github.com/marak0s/dp.git
-%cd dp
-!pip install -e ".[notebooks]"
-!python -m comm_ai.experiments.run_experiment --config src/comm_ai/config/experiments/awgn_smoke.yaml
-```
-
-## Описание структуры кода
-
-Подробная карта модулей: `src/comm_ai/PROJECT_STRUCTURE.md`.
